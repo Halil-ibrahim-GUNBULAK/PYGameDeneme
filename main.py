@@ -59,74 +59,74 @@ white = (255, 255, 255)
 bg = pygame.image.load("assets/images/bg.png")
 
 def draw_bg():
-	screen.blit(bg, (0, 0))
+    screen.blit(bg, (0, 0))
 
 
 #define function for creating text
 def draw_text(text, font, text_col, x, y):
-	img = font.render(text, True, text_col)
-	screen.blit(img, (x, y))
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
 
 
 
 #create spaceship class
 class Spaceship(pygame.sprite.Sprite):
-	def __init__(self, x, y, health):
-		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load("assets/images/spaceship.png")
-		self.rect = self.image.get_rect()
-		self.rect.center = [x, y]
-		self.health_start = health
-		self.health_remaining = health
-		self.last_shot = pygame.time.get_ticks()
+    def __init__(self, x, y, health):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("assets/images/spaceship.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.health_start = health
+        self.health_remaining = health
+        self.last_shot = pygame.time.get_ticks()
 
 
-	def update(self):
-		#set movement speed
-		speed = 8
-		#set a cooldown variable
-		cooldown = 500 #milliseconds
-		game_over = 0
-		gameTime=0
+    def update(self):
+        #set movement speed
+        speed = 8
+        #set a cooldown variable
+        cooldown = 500 #milliseconds
+        game_over = 0
+        gameTime=0
 
 
-		#get key press
-		key = pygame.key.get_pressed()
-		if key[pygame.K_LEFT] and self.rect.left > 0:
-			self.rect.x -= speed
-		if key[pygame.K_RIGHT] and self.rect.right < screen_width:
-			self.rect.x += speed
-			
-		if key[pygame.K_UP] and self.rect.top > 500:
-			self.rect.y -= speed
-		if key[pygame.K_DOWN] and self.rect.bottom < screen_height:
-			self.rect.y += speed
+        #get key press
+        key = pygame.key.get_pressed()
+        if key[pygame.K_LEFT] and self.rect.left > 0:
+            self.rect.x -= speed
+        if key[pygame.K_RIGHT] and self.rect.right < screen_width:
+            self.rect.x += speed
+            
+        if key[pygame.K_UP] and self.rect.top > 500:
+            self.rect.y -= speed
+        if key[pygame.K_DOWN] and self.rect.bottom < screen_height:
+            self.rect.y += speed
 
 
-		#record current time
-		time_now = pygame.time.get_ticks()
-		#shoot
-		if key[pygame.K_SPACE] and time_now - self.last_shot > cooldown:
-			laser_fx.play()
-			bullet = Bullets(self.rect.centerx, self.rect.top)
-			bullet_group.add(bullet)
-			self.last_shot = time_now
+        #record current time
+        time_now = pygame.time.get_ticks()
+        #shoot
+        if key[pygame.K_SPACE] and time_now - self.last_shot > cooldown:
+            laser_fx.play()
+            bullet = Bullets(self.rect.centerx, self.rect.top)
+            bullet_group.add(bullet)
+            self.last_shot = time_now
 
 
-		#update mask
-		self.mask = pygame.mask.from_surface(self.image)
+        #update mask
+        self.mask = pygame.mask.from_surface(self.image)
 
 
-		#draw health bar
-		pygame.draw.rect(screen, red, (self.rect.x, (self.rect.bottom + 10), self.rect.width, 15))
-		if self.health_remaining > 0:
-			pygame.draw.rect(screen, green, (self.rect.x, (self.rect.bottom + 10), int(self.rect.width * (self.health_remaining / self.health_start)), 15))
-		elif self.health_remaining <= 0:
-			explosion = Explosion(self.rect.centerx, self.rect.centery, 3)
-			explosion_group.add(explosion)
-			self.kill()
-			game_over = -1
-		return game_over
+        #draw health bar
+        pygame.draw.rect(screen, red, (self.rect.x, (self.rect.bottom + 10), self.rect.width, 15))
+        if self.health_remaining > 0:
+            pygame.draw.rect(screen, green, (self.rect.x, (self.rect.bottom + 10), int(self.rect.width * (self.health_remaining / self.health_start)), 15))
+        elif self.health_remaining <= 0:
+            explosion = Explosion(self.rect.centerx, self.rect.centery, 3)
+            explosion_group.add(explosion)
+            self.kill()
+            game_over = -1
+        return game_over
 
 def controlAllienSum(alientCount):
 	global oldAlienCount,shootPoint
@@ -142,7 +142,7 @@ def skorHesapla(isGameOver,remaining_health):
 	return resultSkor
 #create Bullets class
 class Bullets(pygame.sprite.Sprite):
-	
+
 	def __init__(self, x, y):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load("assets/images/bullet.png")
@@ -163,83 +163,88 @@ class Bullets(pygame.sprite.Sprite):
 
 
 
+
 #create Aliens class
 class Aliens(pygame.sprite.Sprite):
-	def __init__(self, x, y):
-		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load("assets/images/alien" + str(random.randint(1, 5)) + ".png")
-		self.rect = self.image.get_rect()
-		self.rect.center = [x, y]
-		self.move_counter = 0
-		self.move_direction = 1
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("assets/images/alien" + str(random.randint(1, 5)) + ".png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.move_counter = 0
+        self.move_direction = 1
+        self.move_down = 1
+    
 
-	def update(self):
-		self.rect.x += self.move_direction
-		self.move_counter += 1
-		if abs(self.move_counter) > 75:
-			self.move_direction *= -1
-			self.move_counter *= self.move_direction
+    def update(self):
+        self.rect.x += self.move_direction
+        self.move_counter += 1
+        if abs(self.move_counter) > 75:
+            self.move_direction *= -1
+            self.move_counter *= self.move_direction
+            self.rect.y += 20
+        
 
 
 
 #create Alien Bullets class
 class Alien_Bullets(pygame.sprite.Sprite):
-	def __init__(self, x, y):
-		pygame.sprite.Sprite.__init__(self)
-		self.image = pygame.image.load("assets/images/alien_bullet.png")
-		self.rect = self.image.get_rect()
-		self.rect.center = [x, y]
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("assets/images/alien_bullet.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
 
-	def update(self):
-		self.rect.y += 2
-		if self.rect.top > screen_height:
-			self.kill()
-		if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
-			self.kill()
-			explosion2_fx.play()
-			#reduce spaceship health
-			spaceship.health_remaining -= 1
-			explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
-			explosion_group.add(explosion)
+    def update(self):
+        self.rect.y += 2
+        if self.rect.top > screen_height:
+            self.kill()
+        if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
+            self.kill()
+            explosion2_fx.play()
+            #reduce spaceship health
+            spaceship.health_remaining -= 1
+            explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
+            explosion_group.add(explosion)
 
 
 
 
 #create Explosion class
 class Explosion(pygame.sprite.Sprite):
-	def __init__(self, x, y, size):
-		pygame.sprite.Sprite.__init__(self)
-		self.images = []
-		for num in range(1, 6):
-			img = pygame.image.load(f"assets/images/exp{num}.png")
-			if size == 1:
-				img = pygame.transform.scale(img, (20, 20))
-			if size == 2:
-				img = pygame.transform.scale(img, (40, 40))
-			if size == 3:
-				img = pygame.transform.scale(img, (160, 160))
-			#add the image to the list
-			self.images.append(img)
-		self.index = 0
-		self.image = self.images[self.index]
-		self.rect = self.image.get_rect()
-		self.rect.center = [x, y]
-		self.counter = 0
+    def __init__(self, x, y, size):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+        for num in range(1, 6):
+            img = pygame.image.load(f"assets/images/exp{num}.png")
+            if size == 1:
+                img = pygame.transform.scale(img, (20, 20))
+            if size == 2:
+                img = pygame.transform.scale(img, (40, 40))
+            if size == 3:
+                img = pygame.transform.scale(img, (160, 160))
+            #add the image to the list
+            self.images.append(img)
+        self.index = 0
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.counter = 0
 
 
-	def update(self):
-		explosion_speed = 3
-		#update explosion animation
-		self.counter += 1
+    def update(self):
+        explosion_speed = 3
+        #update explosion animation
+        self.counter += 1
 
-		if self.counter >= explosion_speed and self.index < len(self.images) - 1:
-			self.counter = 0
-			self.index += 1
-			self.image = self.images[self.index]
+        if self.counter >= explosion_speed and self.index < len(self.images) - 1:
+            self.counter = 0
+            self.index += 1
+            self.image = self.images[self.index]
 
-		#if the animation is complete, delete explosion
-		if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
-			self.kill()
+        #if the animation is complete, delete explosion
+        if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
+            self.kill()
 
 
 
@@ -253,11 +258,11 @@ explosion_group = pygame.sprite.Group()
 
 
 def create_aliens():
-	#generate aliens
-	for row in range(rows):
-		for item in range(cols):
-			alien = Aliens(100 + item * 100, 100 + row * 70)
-			alien_group.add(alien)
+    #generate aliens
+    for row in range(rows):
+        for item in range(cols):
+            alien = Aliens(100 + item * 200, 100 + row * 70)
+            alien_group.add(alien)
 
 create_aliens()
 
@@ -271,17 +276,18 @@ spaceship_group.add(spaceship)
 run = True
 while run:
 
-	clock.tick(fps)
+    clock.tick(fps)
 
-	#draw background
-	draw_bg()
+    #draw background
+    draw_bg()
 
 
-	if countdown == 0:
-		#create random alien bullets
+    if countdown == 0:
+        #create random alien bullets
 
-		#record current time
-		time_now = pygame.time.get_ticks()
+        #record current time
+        time_now = pygame.time.get_ticks()
+
 
 		if(game_over==0):
 				draw_text('Süre:' + str(gameTime), font40, white, int(screen_width / 2 + 150), int(screen_height / 2-380))
@@ -330,30 +336,31 @@ while run:
 		if count_timer - last_count > 1000:
 			countdown -= 1
 			last_count = count_timer
+
     
     
     
-		
+        
     
 
 
-	#update explosion group	
-	explosion_group.update()
+    #update explosion group	
+    explosion_group.update()
 
 
-	#draw sprite groups
-	spaceship_group.draw(screen)
-	bullet_group.draw(screen)
-	alien_group.draw(screen)
-	alien_bullet_group.draw(screen)
-	explosion_group.draw(screen)
+    #draw sprite groups
+    spaceship_group.draw(screen)
+    bullet_group.draw(screen)
+    alien_group.draw(screen)
+    alien_bullet_group.draw(screen)
+    explosion_group.draw(screen)
 
 
-	#event handlers
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			run = False
+    #event handlers
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
 
-	pygame.display.update()
+    pygame.display.update()
 
 pygame.quit()
