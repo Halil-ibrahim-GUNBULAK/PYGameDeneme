@@ -59,13 +59,13 @@ white = (255, 255, 255)
 bg = pygame.image.load("assets/images/bg.png")
 
 def draw_bg():
-    screen.blit(bg, (0, 0))
+			screen.blit(bg, (0, 0))
 
 
 #define function for creating text
 def draw_text(text, font, text_col, x, y):
-    img = font.render(text, True, text_col)
-    screen.blit(img, (x, y))
+			img = font.render(text, True, text_col)
+			screen.blit(img, (x, y))
 
 
 
@@ -302,44 +302,44 @@ while run:
 
         #record current time
 
-        time_now = pygame.time.get_ticks()
+		time_now = pygame.time.get_ticks()
 
-        if(game_over==0):
-                draw_text('Süre:' + str(gameTime), font40, white, int(screen_width / 2 + 150), int(screen_height / 2-380))
+		if(game_over==0):
+				draw_text('Süre:' + str(gameTime), font40, white, int(screen_width / 2 + 150), int(screen_height / 2-380))
             
-                count_timer = pygame.time.get_ticks()
+				count_timer = pygame.time.get_ticks()
                 
-                if count_timer - gameTimeCounter > 1000:
-                    gameTime += 1
-                    gameTimeCounter = count_timer
-        draw_text('Skor:' + str(shootPoint), font40, white, int(screen_width / 2 - 280), int(screen_height / 2-380))
-		    controlAllienSum(len(alien_group))
+				if count_timer - gameTimeCounter > 1000:
+					gameTime += 1
+					gameTimeCounter = count_timer
+		draw_text('Skor:' + str(shootPoint), font40, white, int(screen_width / 2 - 280), int(screen_height / 2-380))
+		controlAllienSum(len(alien_group))
                 
 
         #shoot
-        if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0:
-            attacking_alien = random.choice(alien_group.sprites())
-            alien_bullet = Alien_Bullets(attacking_alien.rect.centerx, attacking_alien.rect.bottom)
-            alien_bullet_group.add(alien_bullet)
-            last_alien_shot = time_now
+		if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0:
+			attacking_alien = random.choice(alien_group.sprites())
+			alien_bullet = Alien_Bullets(attacking_alien.rect.centerx, attacking_alien.rect.bottom)
+			alien_bullet_group.add(alien_bullet)
+			last_alien_shot = time_now
 
-         #random.randint(10,20)           
-        if gameTime == 4:
-            
-            heal_group.add(bonus_heal)
-        #check if all the aliens have been killed
-        if len(alien_group) == 0:
-            game_over = 1
+		 #random.randint(10,20)		   
+		if gameTime == 4:
+		    
+			heal_group.add(bonus_heal)
+		#check if all the aliens have been killed
+		if len(alien_group) == 0:
+			game_over = 1
 
-        if game_over == 0:
-            #update spaceship
-            game_over = spaceship.update()
-            bonus_heal.update()
-            #update sprite groups
-            bullet_group.update()
-            alien_group.update()
-            alien_bullet_group.update()
-            
+		if game_over == 0:
+		    #update spaceship
+		    game_over = spaceship.update()
+		    bonus_heal.update()
+		    #update sprite groups
+		    bullet_group.update()
+		    alien_group.update()
+		    alien_bullet_group.update()
+		    
 		else:
 			if game_over == -1:
 				draw_text('GAME OVER!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
@@ -347,26 +347,26 @@ while run:
 			if game_over == 1:
 				draw_text('YOU WIN!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
 				draw_text('TOPLAM SKOR:'+str(skorHesapla(False,spaceship.health_remaining)), font40, white, int(screen_width / 2 - 150), int(screen_height / 2 + 100))
-                
+				
 
-    if countdown > 0:
-        draw_text('GET READY!', font40, white, int(screen_width / 2 - 110), int(screen_height / 2 + 50))
-        draw_text(str(countdown), font40, white, int(screen_width / 2 - 10), int(screen_height / 2 + 100))
-        count_timer = pygame.time.get_ticks()
-        if count_timer - last_count > 1000:
-            countdown -= 1
-            last_count = count_timer
-    
-    
-        
-    
+	if countdown > 0:
+		draw_text('GET READY!', font40, white, int(screen_width / 2 - 110), int(screen_height / 2 + 50))
+		draw_text(str(countdown), font40, white, int(screen_width / 2 - 10), int(screen_height / 2 + 100))
+		count_timer = pygame.time.get_ticks()
+		if count_timer - last_count > 1000:
+					countdown -= 1
+					last_count = count_timer
+			
+			
+		
+			
 
 
-    #update explosion group	
+			#update explosion group	
 	explosion_group.update()
 
 
-    #draw sprite groups
+			#draw sprite groups
 
 	spaceship_group.draw(screen)
 	bullet_group.draw(screen)
@@ -376,7 +376,7 @@ while run:
 
 
 
-    #event handlers
+			#event handlers
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			run = False
