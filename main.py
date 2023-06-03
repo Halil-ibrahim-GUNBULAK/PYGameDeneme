@@ -7,7 +7,7 @@ import random
 pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 pygame.init()
-
+shootPoint=0
 
 #define fps
 clock = pygame.time.Clock()
@@ -45,6 +45,7 @@ last_alien_shot = pygame.time.get_ticks()
 countdown = 3
 gameTime=0
 last_count = pygame.time.get_ticks()
+gameTimeCounter=pygame.time.get_ticks()
 game_over = 0#0 is no game over, 1 means player has won, -1 means player has lost
 
 #define colours
@@ -86,6 +87,7 @@ class Spaceship(pygame.sprite.Sprite):
 		#set a cooldown variable
 		cooldown = 500 #milliseconds
 		game_over = 0
+		gameTime=0
 
 
 		#get key press
@@ -259,14 +261,26 @@ while run:
 
 	if countdown == 0:
 		#create random alien bullets
+
 		#record current time
 		time_now = pygame.time.get_ticks()
+
+		if(game_over==0):
+				draw_text('Süre:' + str(gameTime), font40, white, int(screen_width / 2 + 150), int(screen_height / 2-380))
+			
+				count_timer = pygame.time.get_ticks()
+				if count_timer - gameTimeCounter > 1000:
+					gameTime += 1
+					gameTimeCounter = count_timer
+    
 		#shoot
 		if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0:
 			attacking_alien = random.choice(alien_group.sprites())
 			alien_bullet = Alien_Bullets(attacking_alien.rect.centerx, attacking_alien.rect.bottom)
 			alien_bullet_group.add(alien_bullet)
 			last_alien_shot = time_now
+
+        
 
 		#check if all the aliens have been killed
 		if len(alien_group) == 0:
@@ -280,11 +294,13 @@ while run:
 			bullet_group.update()
 			alien_group.update()
 			alien_bullet_group.update()
+			
 		else:
 			if game_over == -1:
 				draw_text('GAME OVER!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
 			if game_over == 1:
 				draw_text('YOU WIN!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
+			    
 
 	if countdown > 0:
 		draw_text('GET READY!', font40, white, int(screen_width / 2 - 110), int(screen_height / 2 + 50))
@@ -293,7 +309,10 @@ while run:
 		if count_timer - last_count > 1000:
 			countdown -= 1
 			last_count = count_timer
-  
+    
+    
+    
+		
     
 
 
