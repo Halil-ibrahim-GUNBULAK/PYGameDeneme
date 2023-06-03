@@ -96,6 +96,12 @@ class Spaceship(pygame.sprite.Sprite):
 			self.rect.x -= speed
 		if key[pygame.K_RIGHT] and self.rect.right < screen_width:
 			self.rect.x += speed
+			
+		if key[pygame.K_UP] and self.rect.top > 500:
+			self.rect.y -= speed
+		if key[pygame.K_DOWN] and self.rect.bottom < screen_height:
+			self.rect.y += speed
+
 
 		#record current time
 		time_now = pygame.time.get_ticks()
@@ -332,7 +338,6 @@ while run:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			run = False
-
 
 	pygame.display.update()
 
