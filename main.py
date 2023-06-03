@@ -7,8 +7,8 @@ import random
 pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 pygame.init()
-shootPoint=0
-
+shootPoint=-1
+oldAlienCount=-1
 #define fps
 clock = pygame.time.Clock()
 fps = 60
@@ -38,8 +38,8 @@ laser_fx.set_volume(0.25)
 
 
 #define game variables
-rows = 5
-cols = 5
+rows = 3
+cols = 3
 alien_cooldown = 1000#bullet cooldown in milliseconds
 last_alien_shot = pygame.time.get_ticks()
 countdown = 3
@@ -128,10 +128,21 @@ class Spaceship(pygame.sprite.Sprite):
 			game_over = -1
 		return game_over
 
+def controlAllienSum(alientCount):
+	global oldAlienCount,shootPoint
+	if(alientCount!=oldAlienCount):
+		shootPoint+=1
+		oldAlienCount=alientCount
+def skorHesapla(isGameOver,remaining_health):
+	global shootPoint,gameTime
+	resultSkor=shootPoint*100-gameTime*13+remaining_health*100
 
-
+	if(isGameOver):
+		resultSkor=resultSkor - 1000
+	return resultSkor
 #create Bullets class
 class Bullets(pygame.sprite.Sprite):
+	
 	def __init__(self, x, y):
 		pygame.sprite.Sprite.__init__(self)
 		self.image = pygame.image.load("assets/images/bullet.png")
@@ -144,6 +155,7 @@ class Bullets(pygame.sprite.Sprite):
 			self.kill()
 		if pygame.sprite.spritecollide(self, alien_group, True):
 			self.kill()
+			
 			explosion_fx.play()
 			explosion = Explosion(self.rect.centerx, self.rect.centery, 2)
 			explosion_group.add(explosion)
@@ -278,7 +290,8 @@ while run:
 				if count_timer - gameTimeCounter > 1000:
 					gameTime += 1
 					gameTimeCounter = count_timer
-    
+		draw_text('Skor:' + str(shootPoint), font40, white, int(screen_width / 2 - 280), int(screen_height / 2-380))
+		controlAllienSum(len(alien_group))
 		#shoot
 		if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0:
 			attacking_alien = random.choice(alien_group.sprites())
@@ -304,8 +317,10 @@ while run:
 		else:
 			if game_over == -1:
 				draw_text('GAME OVER!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
+				draw_text('TOPLAM SKOR:'+str(skorHesapla(True,spaceship.health_remaining)), font40, white, int(screen_width / 2 - 150), int(screen_height / 2 + 100))
 			if game_over == 1:
 				draw_text('YOU WIN!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
+				draw_text('TOPLAM SKOR:'+str(skorHesapla(False,spaceship.health_remaining)), font40, white, int(screen_width / 2 - 150), int(screen_height / 2 + 100))
 			    
 
 	if countdown > 0:
