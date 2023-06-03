@@ -276,22 +276,21 @@ spaceship_group.add(spaceship)
 run = True
 while run:
 
-    clock.tick(fps)
+	clock.tick(fps)
 
     #draw background
-    draw_bg()
+	draw_bg()
 
 
-    if countdown == 0:
+	if countdown == 0:
         #create random alien bullets
 
         #record current time
-        time_now = pygame.time.get_ticks()
+		time_now = pygame.time.get_ticks()
 
 
 		if(game_over==0):
 				draw_text('Süre:' + str(gameTime), font40, white, int(screen_width / 2 + 150), int(screen_height / 2-380))
-			
 				count_timer = pygame.time.get_ticks()
 				if count_timer - gameTimeCounter > 1000:
 					gameTime += 1
@@ -345,22 +344,22 @@ while run:
 
 
     #update explosion group	
-    explosion_group.update()
+	explosion_group.update()
 
 
     #draw sprite groups
-    spaceship_group.draw(screen)
-    bullet_group.draw(screen)
-    alien_group.draw(screen)
-    alien_bullet_group.draw(screen)
-    explosion_group.draw(screen)
+	spaceship_group.draw(screen)
+	bullet_group.draw(screen)
+	alien_group.draw(screen)
+	alien_bullet_group.draw(screen)
+	explosion_group.draw(screen)
 
 
     #event handlers
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			run = False
 
-    pygame.display.update()
+	pygame.display.update()
 
 pygame.quit()
