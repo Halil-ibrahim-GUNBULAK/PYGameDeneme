@@ -136,7 +136,7 @@ def controlAllienSum(alientCount):
 def skorHesapla(isGameOver,remaining_health):
     global shootPoint,gameTime
     resultSkor=shootPoint*100-gameTime*13+remaining_health*100
-
+    
     if(isGameOver):
         resultSkor=resultSkor - 1000
     return resultSkor
@@ -247,17 +247,18 @@ class Explosion(pygame.sprite.Sprite):
             self.kill()
 
 class Bonus_heal(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y,invis):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("assets/images/heal.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+        self.invis = invis
         
 
     def update(self):
         if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
             self.kill()
-            if spaceship.health_remaining < 3:
+            if spaceship.health_remaining < 3 and self.invis == True:
                 spaceship.health_remaining += 1
                 
             
@@ -272,13 +273,14 @@ alien_bullet_group = pygame.sprite.Group()
 explosion_group = pygame.sprite.Group()
 heal_group = pygame.sprite.Group()
 
+aliens = []
 def create_aliens():
     #generate aliens
     for row in range(rows):
         for item in range(cols):
             alien = Aliens(100 + item * 100, row*70)
             alien_group.add(alien)
-
+            aliens.append(alien)
 create_aliens()
 
 
@@ -286,10 +288,14 @@ create_aliens()
 spaceship = Spaceship(int(screen_width / 2), screen_height - 100, 3)
 spaceship_group.add(spaceship)
 
-bonus_heal = Bonus_heal(random.randint(100,500), random.randint(500,700))
+bonus_heal = Bonus_heal(random.randint(100,500), random.randint(500,700),False)
+
+heal_time = random.randint(10,20)
 
 run = True
 while run:
+
+    live_aliens = alien_group.sprites()
 
     clock.tick(fps)
 
@@ -323,15 +329,21 @@ while run:
             alien_bullet_group.add(alien_bullet)
             last_alien_shot = time_now
 
-         #random.randint(10,20)		   
-        if gameTime == 4:
-            
+        if gameTime == heal_time:
+            bonus_heal.invis = True
             heal_group.add(bonus_heal)
-        #check if all the aliens have been killed
+        bonus_heal.invis = False
+        #check if all the aliens have been killed 
         if len(alien_group) == 0:
             game_over = 1
-
+        #alien arrive at bottom
+        for alien in live_aliens:
+                if alien.rect.y > 800:
+                    game_over = -1
+                     
         if game_over == 0:
+
+            
             #update spaceship
             game_over = spaceship.update()
             bonus_heal.update()
@@ -341,7 +353,7 @@ while run:
             alien_bullet_group.update()
             
         else:
-            if game_over == -1:
+            if game_over == -1 :
                 draw_text('GAME OVER!', font40, white, int(screen_width / 2 - 100), int(screen_height / 2 + 50))
                 draw_text('TOPLAM SKOR:'+str(skorHesapla(True,spaceship.health_remaining)), font40, white, int(screen_width / 2 - 150), int(screen_height / 2 + 100))
             if game_over == 1:
@@ -358,9 +370,6 @@ while run:
                     last_count = count_timer
             
             
-        
-            
-
 
             #update explosion group	
     explosion_group.update()
