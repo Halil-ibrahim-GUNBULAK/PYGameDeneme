@@ -258,8 +258,10 @@ class Bonus_heal(pygame.sprite.Sprite):
     def update(self):
         if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
             self.kill()
-            if spaceship.health_remaining < 3 and self.invis == True:
+            if spaceship.health_remaining < 3  and self.invis == True:
                 spaceship.health_remaining += 1
+                bonus_heal.invis = False
+
                 
             
 
@@ -328,11 +330,10 @@ while run:
             alien_bullet = Alien_Bullets(attacking_alien.rect.centerx, attacking_alien.rect.bottom)
             alien_bullet_group.add(alien_bullet)
             last_alien_shot = time_now
-
+        heal_time = random.randint(10,20)
         if gameTime == heal_time:
             bonus_heal.invis = True
             heal_group.add(bonus_heal)
-        bonus_heal.invis = False
         #check if all the aliens have been killed 
         if len(alien_group) == 0:
             game_over = 1
@@ -346,7 +347,7 @@ while run:
             
             #update spaceship
             game_over = spaceship.update()
-            bonus_heal.update()
+            heal_group.update()
             #update sprite groups
             bullet_group.update()
             alien_group.update()
